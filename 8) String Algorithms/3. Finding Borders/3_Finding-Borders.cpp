@@ -192,7 +192,6 @@ vector<int> computePow(int n){
 void string_hashing_approach(string s){
     int n = s.length();
     if(n == 1){
-        println(1);
         return;
     }
 
