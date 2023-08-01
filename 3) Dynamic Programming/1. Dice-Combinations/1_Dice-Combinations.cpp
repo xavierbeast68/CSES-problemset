@@ -10,7 +10,6 @@
 /**
  * xavierbeast68
  * URL : https://cses.fi/problemset/task/1633
- * Submission Link : https://cses.fi/paste/577928abac25913c586b9c/
  * AVOIDING COMPLEXITY, REDUCES BUGS.
  */
 
@@ -146,46 +145,115 @@ ll getRandomNumber(ll l, ll r)                      {return uniform_int_distribu
 ------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------||||||||||------------------------------------------------------------------------*/
 
-int ans = 0;
-void dfs(int currSum, int target){
-	if(currSum == target){
-        ans = (ans+1)%MOD;
-        return;
-    }
+// int ans = 0;
+// void dfs(int currSum, int target){
+// 	if(currSum == target){
+//         ans = (ans+1)%MOD;
+//         return;
+//     }
 
-    for(int i = 1; i <=6; ++i){
-        if(currSum+i > target){
-            break;
-        }
-        dfs(currSum+i, target);
-    }
-}
+//     for(int i = 1; i <=6; ++i){
+//         if(currSum+i > target){
+//             break;
+//         }
+//         dfs(currSum+i, target);
+//     }
+// }
 
-void solve()
-{
-    /*--Let's Code--*/
+// void solve()
+// {
+//     /*--Let's Code--*/
+//     read(n);
+
+//     // Recursive Solution-> Gives TLE
+//     // dfs(0, n);
+
+//     // Solution via Dynamic Programming
+//     // https://usaco.guide/gold/knapsack?lang=cpp
+//     // https://www.geeksforgeeks.org/dice-throw-dp-30/
+//     // https://codeforces.com/blog/entry/70018
+//     // https://www.youtube.com/watch?v=H1fadmBhC5Q&ab_channel=ProgrammingPathshala
+
+//     vector<int> dp(n+1, 0);
+//     dp[0] = 1;
+//     for(int i = 1; i <= n; ++i){
+//         for(int j = 1; j <= 6; ++j){
+//             if(i-j >= 0){
+//                 dp[i] += dp[i-j]; 
+//             }
+//         }
+//         dp[i] %= MOD;
+//     }
+    
+//     cout << dp[n] << endl;
+// }
+
+void solve(){
     read(n);
 
-    // Recursive Solution-> Gives TLE
-    // dfs(0, n);
+    //* Recursion-> TLE
+    // auto rec = [&](auto& rec, int n)->int{
+    //     if(n == 0){
+    //         return 1;
+    //     }
 
-    // Solution via Dynamic Programming
-    // https://usaco.guide/gold/knapsack?lang=cpp
-    // https://www.geeksforgeeks.org/dice-throw-dp-30/
-    // https://codeforces.com/blog/entry/70018
-    // https://www.youtube.com/watch?v=H1fadmBhC5Q&ab_channel=ProgrammingPathshala
+    //     int cnt = 0;
+    //     for (int i = 1; i <= 6; i++){
+    //         if(n-i < 0){
+    //             break;
+    //         }
+    //         if(n-i >= 0){
+    //             cnt += rec(rec, n-i);
+    //         }
+    //     }
+        
+    //     return cnt;
+    // };
+    // cout << rec(rec, n) << endl;
 
+
+    //* DP Memoization-> Not working with large test case like these 654321
+    // vector<int> dp(n+1, -1);
+    // dp[0] = dp[1] = 1;
+    // auto dp_memo = [&](auto& dp_memo, int currSum, vector<int>& dp)->int{
+    //     if(currSum == 0){
+    //         return 1;
+    //     }
+
+    //     if(dp[currSum] != -1){
+    //         return dp[currSum];
+    //     }
+
+    //     int cnt = 0;
+    //     for (int i = 1; i <= 6; i++){
+    //         if(currSum-i < 0){
+    //             break;
+    //         }
+    //         if(currSum-i >= 0){
+    //             cnt += dp_memo(dp_memo, currSum-i, dp);
+    //         }
+    //     }
+        
+    //     return dp[currSum] = (cnt % MOD);
+    // };
+    // cout << dp_memo(dp_memo, n, dp) << endl;
+
+
+    //* DP Tabulation->
     vector<int> dp(n+1, 0);
     dp[0] = 1;
-    for(int i = 1; i <= n; ++i){
-        for(int j = 1; j <= 6; ++j){
-            if(i-j >= 0){
-                dp[i] += dp[i-j]; 
+
+    for(int currSum = 1; currSum <= n; currSum++){
+        for(int i = 1; i <= 6; i++){
+            if(currSum < i){
+                break;
             }
+
+            dp[currSum] += (dp[currSum - i] %MOD);
         }
-        dp[i] %= MOD;
+        dp[currSum] = dp[currSum]%MOD;
     }
-    
+
     cout << dp[n] << endl;
 }
 
